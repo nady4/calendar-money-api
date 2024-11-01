@@ -35,17 +35,6 @@ The following packages are required to run this code:
 
 <br></br>
 
-## Endpoints 🛠️
-
-The code creates an Express.js app and sets up the following routes:
-
-- `GET /` : a protected route that requires a valid JSON web token to access. Returns the string "success!!!" if the token is valid.
-- `POST /verify-token`: a route that verifies the validity of a JSON web token. Returns a 403 status code if the token is invalid, or the decoded token data if the token is valid.
-- `POST /login` : a route that logs in a user. Accepts a `username` and `password` in the request body, and returns a JSON web token if the login is successful.
-- `POST /register` : a route that registers a new user. Accepts a `username` and `password` in the request body, and returns a JSON web token if the registration is successful.
-
-<br></br>
-
 ## Environment Variables 🔐️
 
 The following environment variables are used in this code:
@@ -69,6 +58,28 @@ There's a connection error with the database:
 The web server started successfully:
 
 `💚 app is running on 🔌 port ${process.env.PORT}`
+
+<br></br>
+
+## Endpoints 🛠️
+
+The code creates an Express.js app and sets up the following routes:
+
+- `POST /register` : a route that registers a new user. Accepts a `username` and `password` in the request body, and returns a JSON web token if the registration is successful.
+- `POST /login` : a route that logs in a user. Accepts a `username` and `password` in the request body, and returns a JSON web token if the login is successful.
+- `POST /logout` : a route that logouts the logged user.
+- `GET /:username` : a route to retrieve user information by username. Returns user details if the user is found.
+- `POST /` : a route to register a new user. Accepts username and password in the request body, creating a new user and returning a confirmation if successful.
+- `PUT /:username` : a route to update an existing user's information. Accepts updated user data in the request body, and updates the specified user's profile.
+- `DELETE /:username` : a route to delete a specific user by username. Removes the user's data and returns a success message if the deletion is successful.
+- `GET /:username/transactions` : a route to retrieve all transactions for a specific user by username. Returns an array of the user's transactions.
+- `POST /:username/transactions` : a route to add a new transaction for a specific user. Accepts transaction details in the request body and adds the transaction to the user's account.
+- `PUT /:username/transactions` : a route to update an existing transaction for a specific user. Accepts updated transaction details in the request body and modifies the specified transaction.
+- `DELETE /:username/transactions` : a route to delete a specific transaction for a user by username. Removes the transaction from the user's record and returns a confirmation message.
+- `GET /:username/categories` : a route to retrieve all spending or income categories for a specific user by username. Returns a list of categories associated with the user.
+- `POST /:username/categories` : a route to add a new category for a user. Accepts category details in the request body, creating a new category in the user's account.
+- `PUT /:username/categories` : a route to update an existing category for a user. Accepts updated category details in the request body and modifies the specified category.
+- `DELETE /:username/categories` : a route to delete a specific category for a user by username. Removes the category from the user's account and returns a confirmation message.
 
 <br></br>
 
