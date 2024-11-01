@@ -74,7 +74,7 @@ The web server started successfully:
 
 ## Stack 🧰
 
-### 📱 [Frontend](http://github.com/nady4/personal-finance)
+### 🎨 [Frontend](http://github.com/nady4/personal-finance)
 
 - React.js
 - TailwindCSS
