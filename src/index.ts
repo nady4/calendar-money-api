@@ -14,8 +14,8 @@ app.use(userRoutes);
 app.use(transactionRoutes);
 app.use(categoryRoutes);
 
-app.listen(3000, () => {
-  console.log("Server started on port 3000");
+app.listen(process.env.PORT, () => {
+  console.log(`💚 app is running on 🔌 port ${process.env.PORT}`);
 });
 
 connectDB();
