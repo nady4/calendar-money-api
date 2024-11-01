@@ -11,11 +11,11 @@ router.post("/", (req, res) => {
   addUser(req, res);
 });
 
-router.put("/", (req, res) => {
+router.put("/:username", (req, res) => {
   updateUser(req, res);
 });
 
-router.delete("/", (req, res) => {
+router.delete("/:username", (req, res) => {
   deleteUser(req, res);
 });
 

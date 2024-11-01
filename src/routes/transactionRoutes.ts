@@ -3,19 +3,19 @@ import { Router } from "express";
 
 const router = Router();
 
-router.get("/transactions/:username", (req, res) => {
+router.get("/:username/transactions", (req, res) => {
   //  getTransactions(req, res);
 });
 
-router.post("/transactions/:username", (req, res) => {
+router.post("/:username/transactions", (req, res) => {
   //  addTransaction(req, res);
 });
 
-router.put("/transactions/:username", (req, res) => {
+router.put("/:username/transactions", (req, res) => {
   //  updateTransaction(req, res);
 });
 
-router.delete("/transactions/:username", (req, res) => {
+router.delete("/:username/transactions", (req, res) => {
   //  deleteTransaction(req, res);
 });
 
