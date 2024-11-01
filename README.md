@@ -23,28 +23,6 @@
 
 <br></br>
 
-## Stack 🧰
-
-### 📱 [Frontend](http://github.com/nady4/personal-finance)
-
-- React.js
-- TailwindCSS
-
-### 🖥️ [Backend](http://github.com/nady4/personal-finance-api)
-
-- TypeScript
-- Node.js
-
-### 💾 Database
-
-- MongoDB
-
-### ☁️ Deploy
-
-- GitHub Pages
-
-<br></br>
-
 ## Dependencies 📚
 
 The following packages are required to run this code:
@@ -94,16 +72,30 @@ The web server started successfully:
 
 <br></br>
 
-## Contact 👋
+## Stack 🧰
 
-### You can see my portfolio at <a href="https://nady4.com/">nady4.com</a> 💼
+### 📱 [Frontend](http://github.com/nady4/personal-finance)
 
-### Mail me at <a href="mailto:dev@nady4.com/">dev@nady4.com</a> ✉️
+- React.js
+- TailwindCSS
+
+### 🖥️ [Backend](http://github.com/nady4/personal-finance-api)
+
+- TypeScript
+- Node.js
+
+### 💾 Database
+
+- MongoDB
+
+### ☁️ Deploy
+
+- GitHub Pages
 
 <br></br>
 
----
 
+---
 ### Frontend code:
 
 - [github.com/nady4/personal-finance](http://github.com/nady4/personal-finance)
@@ -112,6 +104,14 @@ The web server started successfully:
 
 - [github.com/nady4/personal-finance-api](http://github.com/nady4/personal-finance-api)
 
+---
 <br></br>
 
-### [🧠 Try the demo](https://nady4.github.io/personal-finance)
+## Contact 👋
+
+### You can see my portfolio at <a href="https://nady4.com/">nady4.com</a> 💼
+
+### Mail me at <a href="mailto:dev@nady4.com/">dev@nady4.com</a> ✉️
+
+<br></br>
+
