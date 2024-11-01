@@ -60,7 +60,7 @@ The following environment variables are used in this code:
 
 The database connects successfully:
 
-`🟢 MongoDB connected: ${conn.connection.host}`
+`🟢 MongoDB connected: ${process.env.MONGO_URL}`
 
 There's a connection error with the database:
 
@@ -94,8 +94,8 @@ The web server started successfully:
 
 <br></br>
 
-
 ---
+
 ### Frontend code:
 
 - [github.com/nady4/personal-finance](http://github.com/nady4/personal-finance)
@@ -105,6 +105,7 @@ The web server started successfully:
 - [github.com/nady4/personal-finance-api](http://github.com/nady4/personal-finance-api)
 
 ---
+
 <br></br>
 
 ## Contact 👋
@@ -114,4 +115,3 @@ The web server started successfully:
 ### Mail me at <a href="mailto:dev@nady4.com/">dev@nady4.com</a> ✉️
 
 <br></br>
-
