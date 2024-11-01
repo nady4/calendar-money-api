@@ -1,7 +1,6 @@
 ## 🧠 personal-finance-api
 
 <div align="center">
- <img src="https://github.com/nady4/personal-finance-api/blob/main/clarifai.jpg" width="800px">
 </div>
 
 <br></br>
@@ -54,7 +53,6 @@ The following packages are required to run this code:
 - `bcrypt` for hashing passwords
 - `cors` for handling Cross-Origin Resource Sharing (CORS)
 - `zod` for schema validation, ensuring type safety
-- `clarifai-nodejs` for integration with the Clarifai API, an AI-powered image and video recognition tool.
 
 <br></br>
 
@@ -66,7 +64,6 @@ The code creates an Express.js app and sets up the following routes:
 - `POST /verify-token`: a route that verifies the validity of a JSON web token. Returns a 403 status code if the token is invalid, or the decoded token data if the token is valid.
 - `POST /login` : a route that logs in a user. Accepts a `username` and `password` in the request body, and returns a JSON web token if the login is successful.
 - `POST /register` : a route that registers a new user. Accepts a `username` and `password` in the request body, and returns a JSON web token if the registration is successful.
-- `POST /image` : a protected route that requires a valid JSON web token to access. Accepts an image URL in the request body, and returns the image data processed by the Clarifai API.
 
 <br></br>
 
