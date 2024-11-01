@@ -7,15 +7,15 @@ router.get("/transactions/:username", (req, res) => {
   //  getTransactions(req, res);
 });
 
-router.post("/transactions", (req, res) => {
+router.post("/transactions/:username", (req, res) => {
   //  addTransaction(req, res);
 });
 
-router.put("/transactions", (req, res) => {
+router.put("/transactions/:username", (req, res) => {
   //  updateTransaction(req, res);
 });
 
-router.delete("/transactions", (req, res) => {
+router.delete("/transactions/:username", (req, res) => {
   //  deleteTransaction(req, res);
 });
 

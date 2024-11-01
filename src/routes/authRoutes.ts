@@ -3,15 +3,15 @@ import { register, login, logout } from "../controllers/auth";
 
 const router = Router();
 
-router.get("/register", (req, res) => {
+router.post("/register", (req, res) => {
   register(req, res);
 });
 
-router.get("/login", (req, res) => {
+router.post("/login", (req, res) => {
   login(req, res);
 });
 
-router.get("/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   logout(req, res);
 });
 

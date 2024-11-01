@@ -7,15 +7,15 @@ router.get("/categories/:username", (req, res) => {
   //  getCategories(req, res);
 });
 
-router.post("/categories", (req, res) => {
+router.post("/categories/:username", (req, res) => {
   //  addCategory(req, res);
 });
 
-router.put("/categories", (req, res) => {
+router.put("/categories/:username", (req, res) => {
   //  updateCategory(req, res);
 });
 
-router.delete("/categories", (req, res) => {
+router.delete("/categories/:username", (req, res) => {
   //  deleteCategory(req, res);
 });
 
