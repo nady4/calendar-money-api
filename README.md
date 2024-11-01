@@ -1,7 +1,7 @@
 ## 🧠 personal-finance-api
 
 <div align="center">
- <img src="https://github.com/nady4/personal-finance-api/blob/main/ui.png" width="800px">
+ <img src="https://github.com/nady4/personal-finance-api/blob/main/ui.PNG" width="800px">
 </div>
 
 <br></br>
