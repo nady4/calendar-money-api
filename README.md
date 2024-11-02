@@ -23,6 +23,17 @@
 
 <br></br>
 
+
+## Environment Variables 🔐️
+
+The following environment variables are used in this code:
+
+- `MONGO_URL`: the URL of the MongoDB existing database
+- `JWT_KEY` : the secret key to sign JSON web tokens with
+- `PORT` : the port number to run the web server on
+
+<br></br>
+
 ## Dependencies 📚
 
 The following packages are required to run this code:
@@ -32,16 +43,6 @@ The following packages are required to run this code:
 - `bcrypt` for hashing passwords
 - `cors` for handling Cross-Origin Resource Sharing (CORS)
 - `zod` for schema validation, ensuring type safety
-
-<br></br>
-
-## Environment Variables 🔐️
-
-The following environment variables are used in this code:
-
-- `MONGO_URL`: the URL of the MongoDB existing database
-- `JWT_KEY` : the secret key to sign JSON web tokens with
-- `PORT` : the port number to run the web server on
 
 <br></br>
 
@@ -69,7 +70,6 @@ The code creates an Express.js app and sets up the following routes:
 - `POST /login` : a route that logs in a user. Accepts a `username` and `password` in the request body, and returns a JSON web token if the login is successful.
 - `POST /logout` : a route that logouts the logged user.
 - `GET /:username` : a route to retrieve user information by username. Returns user details if the user is found.
-- `POST /` : a route to register a new user. Accepts username and password in the request body, creating a new user and returning a confirmation if successful.
 - `PUT /:username` : a route to update an existing user's information. Accepts updated user data in the request body, and updates the specified user's profile.
 - `DELETE /:username` : a route to delete a specific user by username. Removes the user's data and returns a success message if the deletion is successful.
 - `GET /:username/transactions` : a route to retrieve all transactions for a specific user by username. Returns an array of the user's transactions.
