@@ -1,10 +1,10 @@
 process.loadEnvFile();
-import { connectDB } from "./util/connectDB";
 import express from "express";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
+import { connectDB } from "./util/connectDB";
 
 const app = express();
 

@@ -27,29 +27,6 @@ const getUser = async (req: Request, res: Response) => {
   }
 };
 
-const addUser = async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
-
-  try {
-    const user = await User.create({
-      username,
-      email,
-      password,
-    });
-
-    return res.status(200).json({
-      success: true,
-      user: user,
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({
-      success: false,
-      error: "Server Error",
-    });
-  }
-};
-
 const updateUser = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
 
@@ -106,4 +83,4 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export { getUser, addUser, updateUser, deleteUser };
+export { getUser, updateUser, deleteUser };
