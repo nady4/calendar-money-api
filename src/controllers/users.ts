@@ -1,11 +1,10 @@
 import User from "../models/User";
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 
 const getUser = async (req: Request, res: Response) => {
   try {
-    const { username } = req.params;
-
-    const user = await User.find({ username: username });
+    const user = await User.find({ username: req.params.username });
 
     if (!user.length) {
       return res.status(404).json({
@@ -28,25 +27,19 @@ const getUser = async (req: Request, res: Response) => {
 };
 
 const updateUser = async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
-
   try {
-    const user = await User.findOneAndUpdate(
+    const { username, email } = req.body;
+    const newPassword = bcrypt.hashSync(req.body.password, 10);
+
+    const updatedUser = await User.findOneAndUpdate(
       { username: username },
-      { email, password },
+      { email: email, password: newPassword },
       { new: true }
     );
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: "User not found",
-      });
-    }
-
     return res.status(200).json({
       success: true,
-      user: user,
+      user: updatedUser,
     });
   } catch (err) {
     console.log(err);
@@ -58,9 +51,8 @@ const updateUser = async (req: Request, res: Response) => {
 };
 
 const deleteUser = async (req: Request, res: Response) => {
-  const { username } = req.body;
-
   try {
+    const { username } = req.body;
     const user = await User.findOneAndDelete({ username: username });
 
     if (!user) {

@@ -1,8 +1,8 @@
+import User from "../models/User";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import User from "../models/User";
-import { Request, Response } from "express";
 import { z } from "zod";
+import { Request, Response } from "express";
 
 const registrationSchema = z.object({
   username: z
@@ -35,14 +35,26 @@ const register = async (req: Request, res: Response) => {
     }
 
     const hash = bcrypt.hashSync(password, 10);
-    const newUser = new User({
+    const user = new User({
       username,
       email,
       password: hash,
     });
+    user.save();
 
-    newUser.save();
-    return res.status(200).json("User registered successfully ✅");
+    const jwtSecret = process.env.JWT_SECRET;
+    jwt.sign(
+      { user },
+      jwtSecret as string,
+      { expiresIn: "7d" },
+      (err, token) => {
+        return res.status(200).json({
+          success: true,
+          token,
+          user,
+        });
+      }
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errors = error.errors.map((e) => e.message).join(", ");
@@ -57,21 +69,23 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
-
   const user = await User.findOne({ username: username });
+
   if (!user) {
     console.log("Username not found on login 🚫");
     return res.status(400).json("\nUser not found on login 🚫");
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
+
   if (!isPasswordValid) {
     console.log("\nPassword incorrect 🚫");
     return res.status(401).json("\nPassword incorrect 🚫");
   }
 
   jwt.sign({ user }, "secretKey", { expiresIn: "7d" }, (err, token) => {
-    res.status(200).json({
+    return res.status(200).json({
+      success: true,
       token,
       user,
     });

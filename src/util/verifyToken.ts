@@ -19,5 +19,3 @@ export const verifyToken = (
     res.sendStatus(403);
   }
 };
-
-module.exports = verifyToken;
