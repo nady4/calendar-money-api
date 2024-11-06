@@ -42,19 +42,10 @@ const register = async (req: Request, res: Response) => {
     });
     user.save();
 
-    const jwtSecret = process.env.JWT_SECRET;
-    jwt.sign(
-      { user },
-      jwtSecret as string,
-      { expiresIn: "7d" },
-      (err, token) => {
-        return res.status(200).json({
-          success: true,
-          token,
-          user,
-        });
-      }
-    );
+    return res.status(200).json({
+      success: true,
+      user,
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errors = error.errors.map((e) => e.message).join(", ");
@@ -83,13 +74,18 @@ const login = async (req: Request, res: Response) => {
     return res.status(401).json("\nPassword incorrect 🚫");
   }
 
-  jwt.sign({ user }, "secretKey", { expiresIn: "7d" }, (err, token) => {
-    return res.status(200).json({
-      success: true,
-      token,
-      user,
-    });
-  });
+  jwt.sign(
+    { user },
+    process.env.JWT_SECRET as string,
+    { expiresIn: "7d" },
+    (err, token) => {
+      return res.status(200).json({
+        success: true,
+        user,
+        token,
+      });
+    }
+  );
 };
 
 const logout = (req: Request, res: Response) => {

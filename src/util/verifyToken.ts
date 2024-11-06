@@ -1,20 +1,21 @@
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 
-interface AuthRequest extends Request {
-  token?: string;
-}
+export const verifyToken = (req: Request, res: Response) => {
+  const { userId } = req.body;
+  const authorization = req.get("authorization");
 
-export const verifyToken = (
-  req: AuthRequest,
-  res: Response,
-  next: Function
-) => {
-  const bearerHeader = req.headers["authorization"];
-  if (typeof bearerHeader !== "undefined") {
-    const bearer = bearerHeader.split(" ");
-    const bearerToken = bearer[1];
-    req.token = bearerToken;
-    next();
+  if (typeof authorization !== "undefined") {
+    const token = authorization.split(" ")[1];
+
+    const decoded = jwt.verify(
+      token as string,
+      process.env.JWT_SECRET as string
+    );
+
+    if (userId !== (decoded as any).user._id) {
+      return res.sendStatus(403);
+    }
   } else {
     res.sendStatus(403);
   }

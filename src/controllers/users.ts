@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 const getUser = async (req: Request, res: Response) => {
   try {
-    const user = await User.find({ username: req.params.username });
+    const user = await User.find({ _id: req.body.userId });
 
     if (!user.length) {
       return res.status(404).json({
@@ -28,14 +28,22 @@ const getUser = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   try {
-    const { username, email } = req.body;
-    const newPassword = bcrypt.hashSync(req.body.password, 10);
+    const { userId, password } = req.body;
 
-    const updatedUser = await User.findOneAndUpdate(
-      { username: username },
-      { email: email, password: newPassword },
-      { new: true }
-    );
+    if (password) {
+      req.body.password = bcrypt.hashSync(password, 10);
+    }
+
+    const updatedUser = await User.findOneAndUpdate({ _id: userId }, req.body, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        error: "User not found",
+      });
+    }
 
     return res.status(200).json({
       success: true,
@@ -52,8 +60,8 @@ const updateUser = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const { username } = req.body;
-    const user = await User.findOneAndDelete({ username: username });
+    const { userId } = req.body;
+    const user = await User.findOneAndDelete({ _id: userId });
 
     if (!user) {
       return res.status(404).json({

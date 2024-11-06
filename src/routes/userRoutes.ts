@@ -1,20 +1,21 @@
-import { Router, RequestHandler } from "express";
+import { Router } from "express";
 import { getUser, updateUser, deleteUser } from "../controllers/users";
-import { verifyToken } from "../util/verifyToken";
+const { verifyToken } = require("../util/verifyToken");
 
 const router = Router();
 
-router.get("/:username", (req, res) => {
+router.get("/users", (req, res) => {
+  verifyToken(req, res);
   getUser(req, res);
 });
 
-router.put("/:username", (req, res) => {
-  verifyToken(req, res, async () => {
-    await updateUser(req, res);
-  });
+router.put("/users", async (req, res) => {
+  verifyToken(req, res);
+  await updateUser(req, res);
 });
 
-router.delete("/:username", (req, res) => {
+router.delete("/users", (req, res) => {
+  verifyToken(req, res);
   deleteUser(req, res);
 });
 
