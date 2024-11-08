@@ -4,15 +4,15 @@ const { verifyToken } = require("../middlewares/verifyToken");
 
 const router = Router();
 
-router.get("/users", verifyToken, (req, res) => {
+router.get("/user", verifyToken, (req, res) => {
   getUser(req, res);
 });
 
-router.put("/users", verifyToken, async (req, res) => {
+router.put("/user", verifyToken, (req, res) => {
   updateUser(req, res);
 });
 
-router.delete("/users", verifyToken, (req, res) => {
+router.delete("/user", verifyToken, (req, res) => {
   deleteUser(req, res);
 });
 

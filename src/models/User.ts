@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import Transaction from "./Transaction";
-import Category from "./Category";
 
 const userSchema = new mongoose.Schema({
   username: {
