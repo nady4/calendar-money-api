@@ -8,11 +8,11 @@ router.get("/user/:userId", verifyToken, (req, res) => {
   getUser(req, res);
 });
 
-router.put("/user", verifyToken, (req, res) => {
+router.put("/user/:userId", verifyToken, (req, res) => {
   updateUser(req, res);
 });
 
-router.delete("/user", verifyToken, (req, res) => {
+router.delete("/user/:userId", verifyToken, (req, res) => {
   deleteUser(req, res);
 });
 

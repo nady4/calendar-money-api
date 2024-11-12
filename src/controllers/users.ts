@@ -43,7 +43,8 @@ const createCategory = async (categoryData: any) => {
 
 const updateUser = async (req: Request, res: Response) => {
   try {
-    const { userId, password, categories, transactions } = req.body;
+    const { password, categories, transactions } = req.body;
+    const userId = req.params.userId;
 
     if (password) {
       req.body.password = bcrypt.hashSync(password, 10);
@@ -121,7 +122,7 @@ const updateUser = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.body;
+    const userId = req.params.userId;
     const user = await User.findOneAndDelete({ _id: userId });
 
     if (!user) {
