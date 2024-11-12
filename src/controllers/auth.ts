@@ -60,7 +60,10 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ username: username });
+  const user = await User.findOne({ username: username }).populate(
+    "categories"
+  );
+  //.populate("transactions");
 
   if (!user) {
     console.log("Username not found on login 🚫");
