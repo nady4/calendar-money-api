@@ -1,8 +1,8 @@
-import User from "../models/User";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { z } from "zod";
 import { Request, Response } from "express";
+import { z } from "zod";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import User from "../models/User";
 
 const registrationSchema = z.object({
   username: z
@@ -60,10 +60,16 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ username: username }).populate(
-    "categories"
-  );
-  //.populate("transactions");
+  const user = await User.findOne({ username: username })
+    .populate("categories")
+    .populate({
+      path: "transactions",
+      model: "Transaction",
+      populate: {
+        path: "category",
+        model: "Category",
+      },
+    });
 
   if (!user) {
     console.log("Username not found on login 🚫");

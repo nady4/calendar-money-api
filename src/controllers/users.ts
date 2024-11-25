@@ -1,15 +1,19 @@
-import User from "../models/User";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import Category from "../models/Category";
-import Transaction from "../models/Transaction";
+import User from "../models/User";
 
 const getUser = async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.params.userId).populate("categories");
-    //.populate("transactions");
-
-    console.log(user);
+    const user = await User.findById(req.params.userId)
+      .populate("categories")
+      .populate({
+        path: "transactions",
+        model: "Transaction",
+        populate: {
+          path: "category",
+          model: "Category",
+        },
+      });
 
     if (!user) {
       return res.status(404).json({
@@ -31,57 +35,13 @@ const getUser = async (req: Request, res: Response) => {
   }
 };
 
-const createCategory = async (categoryData: any) => {
-  const category = new Category({
-    name: categoryData.name,
-    color: categoryData.color,
-    type: categoryData.type,
-  });
-
-  return await category.save();
-};
-
 const updateUser = async (req: Request, res: Response) => {
   try {
-    const { password, categories, transactions } = req.body;
+    const { password, email, username } = req.body;
     const userId = req.params.userId;
 
     if (password) {
       req.body.password = bcrypt.hashSync(password, 10);
-    }
-
-    if (categories) {
-      const newCategory = await createCategory(
-        categories[categories.length - 1]
-      );
-
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: userId },
-        {
-          $push: { categories: newCategory._id },
-          updatedAt: new Date(),
-        },
-        {
-          new: true,
-          runValidators: true,
-        }
-      ).populate({
-        path: "categories",
-        model: "Category",
-        select: "name color type",
-      });
-
-      if (!updatedUser) {
-        return res.status(404).json({
-          success: false,
-          error: "User not found",
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        user: updatedUser,
-      });
     }
 
     const updatedUser = await User.findOneAndUpdate(

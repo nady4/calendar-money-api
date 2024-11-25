@@ -47,7 +47,7 @@ export const verifyToken = (
 
     const decoded = jwt.verify(token, jwtSecret) as JWTPayload;
 
-    const { userId } = req.body;
+    const userId = req.params.userId;
     if (userId && userId !== decoded.user._id) {
       throw new AuthError("User ID mismatch");
     }
