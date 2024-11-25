@@ -123,6 +123,6 @@ The code creates an Express.js app and sets up the following routes:
 
 ### You can see my portfolio at <a href="https://nady4.com/">nady4.com</a> 💼
 
-### Mail me at <a href="mailto:dev@nady4.com/">dev@nady4.com</a> ✉️
+### Mail me at <a href="mailto:dev@nady4.com/">nadyajerochim@gmail.com</a> ✉️
 
 <br></br>
