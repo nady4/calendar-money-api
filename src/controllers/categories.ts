@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/User";
 import Category from "../models/Category";
+import Transaction from "../models/Transaction";
 
 const createCategory = async (req: Request, res: Response) => {
   try {
@@ -25,11 +26,17 @@ const createCategory = async (req: Request, res: Response) => {
         new: true,
         runValidators: true,
       }
-    ).populate({
-      path: "categories",
-      model: "Category",
-      select: "name color type",
-    });
+    )
+      .populate("categories")
+      .populate({
+        path: "transactions",
+        model: "Transaction",
+        populate: {
+          path: "category",
+          model: "Category",
+        },
+      });
+
     if (!updatedUser) {
       return res.status(404).json({
         success: false,
@@ -74,9 +81,20 @@ const updateCategory = async (req: Request, res: Response) => {
       });
     }
 
+    const user = await User.findById(req.params.userId)
+      .populate("categories")
+      .populate({
+        path: "transactions",
+        model: "Transaction",
+        populate: {
+          path: "category",
+          model: "Category",
+        },
+      });
+
     return res.status(200).json({
       success: true,
-      user: updatedCategory,
+      user,
     });
   } catch (err) {
     console.log(err);
@@ -102,11 +120,17 @@ const deleteCategory = async (req: Request, res: Response) => {
         new: true,
         runValidators: true,
       }
-    ).populate({
-      path: "categories",
-      model: "Category",
-      select: "name color type",
-    });
+    )
+      .populate("categories")
+      .populate({
+        path: "transactions",
+        model: "Transaction",
+        populate: {
+          path: "category",
+          model: "Category",
+        },
+      });
+
     if (!updatedUser) {
       return res.status(404).json({
         success: false,
@@ -115,6 +139,7 @@ const deleteCategory = async (req: Request, res: Response) => {
     }
 
     await Category.findOneAndDelete({ _id: id });
+    await Transaction.deleteMany({ category: id });
 
     return res.status(200).json({
       success: true,

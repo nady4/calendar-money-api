@@ -26,18 +26,16 @@ const createTransaction = async (req: Request, res: Response) => {
         new: true,
         runValidators: true,
       }
-    ).populate([
-      {
-        path: "categories",
-        model: "Category",
-        select: "name color type",
-      },
-      {
+    )
+      .populate("categories")
+      .populate({
         path: "transactions",
         model: "Transaction",
-        select: "date amount description category",
-      },
-    ]);
+        populate: {
+          path: "category",
+          model: "Category",
+        },
+      });
 
     if (!updatedUser) {
       return res.status(404).json({
@@ -84,9 +82,20 @@ const updateTransaction = async (req: Request, res: Response) => {
       });
     }
 
+    const user = await User.findById(req.params.userId)
+      .populate("categories")
+      .populate({
+        path: "transactions",
+        model: "Transaction",
+        populate: {
+          path: "category",
+          model: "Category",
+        },
+      });
+
     return res.status(200).json({
       success: true,
-      user: updatedTransaction,
+      user,
     });
   } catch (err) {
     console.log(err);
@@ -99,31 +108,29 @@ const updateTransaction = async (req: Request, res: Response) => {
 
 const deleteTransaction = async (req: Request, res: Response) => {
   try {
+    const { id } = req.body;
     const userId = req.params.userId;
-    const transactionId = req.params.transactionId;
 
     const updatedUser = await User.findOneAndUpdate(
       { _id: userId },
       {
-        $pull: { transactions: transactionId },
+        $pull: { transactions: id },
         updatedAt: new Date(),
       },
       {
         new: true,
         runValidators: true,
       }
-    ).populate([
-      {
-        path: "categories",
-        model: "Category",
-        select: "name color type",
-      },
-      {
+    )
+      .populate("categories")
+      .populate({
         path: "transactions",
         model: "Transaction",
-        select: "date amount description category",
-      },
-    ]);
+        populate: {
+          path: "category",
+          model: "Category",
+        },
+      });
 
     if (!updatedUser) {
       return res.status(404).json({
@@ -132,7 +139,7 @@ const deleteTransaction = async (req: Request, res: Response) => {
       });
     }
 
-    await Transaction.findOneAndDelete({ _id: transactionId });
+    await Transaction.findOneAndDelete({ _id: id });
 
     return res.status(200).json({
       success: true,
