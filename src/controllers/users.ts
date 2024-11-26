@@ -47,18 +47,25 @@ const updateUser = async (req: Request, res: Response) => {
     const updatedUser = await User.findOneAndUpdate(
       { _id: userId },
       {
-        ...req.body,
+        email: email,
+        username: username,
+        password: req.body.password,
         updatedAt: new Date(),
       },
       {
         new: true,
         runValidators: true,
       }
-    ).populate({
-      path: "categories",
-      model: "Category",
-      select: "name color type",
-    });
+    )
+      .populate("categories")
+      .populate({
+        path: "transactions",
+        model: "Transaction",
+        populate: {
+          path: "category",
+          model: "Category",
+        },
+      });
 
     if (!updatedUser) {
       return res.status(404).json({

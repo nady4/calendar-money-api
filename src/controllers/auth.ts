@@ -3,6 +3,7 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+import { insertDefaultCategories } from "../util/defaultCategories";
 
 const registrationSchema = z.object({
   username: z
@@ -35,11 +36,16 @@ const register = async (req: Request, res: Response) => {
     }
 
     const hash = bcrypt.hashSync(password, 10);
+    const defaultCategoryIds = await insertDefaultCategories();
+
     const user = new User({
       username,
       email,
       password: hash,
+      categories: defaultCategoryIds,
     });
+
+    await user.save();
     user.save();
 
     return res.status(200).json({
