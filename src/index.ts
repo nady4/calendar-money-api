@@ -19,5 +19,5 @@ app.use(categoriesRoutes);
 app.use(transactionsRoutes);
 
 app.listen(process.env.PORT, () => {
-  console.log(`💚 app is running on 🔌 port ${process.env.PORT}`);
+  console.log(`\n💚 app is running on 🔌 port ${process.env.PORT}`);
 });
