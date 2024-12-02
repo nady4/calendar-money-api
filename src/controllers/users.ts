@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import User from "../models/User";
+import Category from "../models/Category";
+import Transaction from "../models/Transaction";
 
 const getUser = async (req: Request, res: Response) => {
   try {
@@ -90,14 +92,17 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
-    const user = await User.findOneAndDelete({ _id: userId });
+    const user = await User.findOne({ _id: userId }).select(
+      "categories transactions"
+    );
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: "User not found",
-      });
+      return res.status(404).json({ message: "User not found" });
     }
+
+    await Category.deleteMany({ _id: { $in: user.categories } });
+    await Transaction.deleteMany({ _id: { $in: user.transactions } });
+    await User.findOneAndDelete({ _id: userId });
 
     return res.status(200).json({
       success: true,
