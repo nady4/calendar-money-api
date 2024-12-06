@@ -18,6 +18,10 @@ const transactionSchema = new mongoose.Schema({
     ref: "Category",
     required: true,
   },
+  group: {
+    type: String,
+    required: false,
+  },
 });
 
 export default mongoose.model("Transaction", transactionSchema);
