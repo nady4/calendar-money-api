@@ -8,9 +8,8 @@ interface AuthenticatedRequest extends Request {
 }
 
 interface JWTPayload {
-  user: {
-    _id: string;
-  };
+  id: string;
+  username: string;
 }
 
 class AuthError extends Error {
@@ -48,11 +47,11 @@ export const verifyToken = (
     const decoded = jwt.verify(token, jwtSecret) as JWTPayload;
 
     const userId = req.params.userId;
-    if (userId && userId !== decoded.user._id) {
+    if (userId && userId !== decoded.id) {
       throw new AuthError("User ID mismatch");
     }
 
-    req.user = decoded.user;
+    req.user = { _id: decoded.id };
 
     next();
   } catch (error) {

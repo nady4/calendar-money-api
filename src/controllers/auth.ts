@@ -89,14 +89,14 @@ const login = async (req: Request, res: Response) => {
   }
 
   jwt.sign(
-    { user },
+    { id: user._id, username: user.username },
     process.env.JWT_SECRET as string,
     { expiresIn: "7d" },
     (err, token) => {
       return res.status(200).json({
         success: true,
-        user,
         token,
+        user,
       });
     }
   );
