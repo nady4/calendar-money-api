@@ -1,7 +1,6 @@
 ## 🧠 personal-finance-api
 
 <div align="center">
- <img src="https://github.com/nady4/personal-finance-api/blob/main/ui.PNG" width="800px">
 </div>
 
 <br></br>
@@ -22,7 +21,6 @@
 5. Run the code with `npm start`
 
 <br></br>
-
 
 ## Environment Variables 🔐️
 

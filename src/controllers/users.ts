@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User";
 import Category from "../models/Category";
 import Transaction from "../models/Transaction";
-
+import mongoose from "mongoose";
 const getUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.params.userId)
@@ -24,12 +24,19 @@ const getUser = async (req: Request, res: Response) => {
       });
     }
 
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid user ID",
+      });
+    }
+
     return res.status(200).json({
       success: true,
       user: user,
     });
   } catch (err) {
-    console.log(err);
+    console.error("Error getting user:", err);
     return res.status(500).json({
       success: false,
       error: "Server Error",

@@ -46,7 +46,6 @@ const register = async (req: Request, res: Response) => {
     });
 
     await user.save();
-    user.save();
 
     return res.status(200).json({
       success: true,
@@ -101,10 +100,13 @@ const login = async (req: Request, res: Response) => {
       });
     }
   );
+
+  console.log("\nUser logged in successfully ✅");
 };
 
 const logout = (req: Request, res: Response) => {
   try {
+    res.clearCookie("user");
     res.clearCookie("token");
     return res.status(200).json("User logged out successfully ✅");
   } catch (error) {
