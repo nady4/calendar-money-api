@@ -1,126 +1,83 @@
-## 🧠 personal-finance-api
+<p align="center">
+    <img src="./src/assets/calendarIcon.svg" height="50px">
+</p>
+<h1 align="center"> Calendar Money </h1>
 
-<div align="center">
-</div>
+<p align="center">
+💸 Cash-flow management web app built with TypeScript, React, Node.js, Express, and MongoDB.
+</p>
 
-<br></br>
+<p align="center">
+    <img src="./src/assets/docs/desktop_home2.png" width="100%">
+    <img src="./src/assets/docs/mobile_home.png" width="49%">
+    <img src="./src/assets/docs/mobile_login.png" width="49%">
+    <img src="./src/assets/docs/mobile_account.png" width="49%">
+    <img src="./src/assets/docs/mobile_editcat.png" width="49%">
+</p>
 
-## Installation ▶️
+<br>
 
-1. Clone the repository
-   `git clone https://github.com/nady4/personal-finance-api.git`
+## 💾 Installation & Setup
 
-2. Enter into the project folder
-   `cd personal-finance-api`
+### Backend
 
-3. Install the required packages
-   `npm install`
+```sh
+# 📥 Clone the repository
+git clone https://github.com/nady4/calendar-money-api
 
-4. Create a `.env` file in the project directory and set the environment variables
+# 📂 Move to the project folder
+cd calendar-money-api
 
-5. Run the code with `npm start`
+# 📦 Install dependencies
+npm install
 
-<br></br>
+# 🛠️ Create .env file
+cat <<EOF > .env
+PORT=3000
+MONGODB_URL=mongodb://localhost:27017/calendar-money
+JWT_SECRET=yoursecret
+EOF
 
-## Environment Variables 🔐️
+# 🚀 Run the app
+npm run dev
+```
 
-The following environment variables are used in this code:
+### Frontend
 
-- `MONGO_URL`: the URL of the MongoDB existing database
-- `JWT_KEY` : the secret key to sign JSON web tokens with
-- `PORT` : the port number to run the web server on
+```sh
+# 📥 Clone the repository
+git clone https://github.com/nady4/calendar-money
 
-<br></br>
+# 📂 Move to the project folder
+cd calendar-money
 
-## Dependencies 📚
+# 📦 Install dependencies
+npm install
 
-The following packages are required to run this code:
+# 🚀 Run the app (you will need a backend first)
+npm run dev
+```
 
-- `express` for creating the web server
-- `jsonwebtoken` for handling JSON web tokens for authentication
-- `bcrypt` for hashing passwords
-- `cors` for handling Cross-Origin Resource Sharing (CORS)
-- `zod` for schema validation, ensuring type safety
+## 🚀 Tech Stack
 
-<br></br>
+| Technology  | Version |
+| ----------- | ------- |
+| Node.js     | ^18+    |
+| Express     | ^4.21.1 |
+| TypeScript  | ^5.6.3  |
+| Mongoose    | ^8.8.0  |
+| ts-node-dev | ^2.0.0  |
 
-## Logs 🗃️
+<br>
 
-The database connects successfully:
+## 🎮 Demo
 
-`🟢 MongoDB connected: ${process.env.MONGO_URL}`
+🚧 _Coming soon... Stay tuned!_ 🚧
 
-There's a connection error with the database:
+<br>
 
-`🔴 Database connection error: ${error.message}`
+## 📬 Contact
 
-The web server started successfully:
-
-`💚 app is running on 🔌 port ${process.env.PORT}`
-
-<br></br>
-
-## Endpoints 🛠️
-
-The code creates an Express.js app and sets up the following routes:
-
-- `POST /register` : a route that registers a new user. Accepts a `username` and `password` in the request body, and returns a JSON web token if the registration is successful.
-- `POST /login` : a route that logs in a user. Accepts a `username` and `password` in the request body, and returns a JSON web token if the login is successful.
-- `POST /logout` : a route that logouts the logged user.
-- `GET /:username` : a route to retrieve user information by username. Returns user details if the user is found.
-- `PUT /:username` : a route to update an existing user's information. Accepts updated user data in the request body, and updates the specified user's profile.
-- `DELETE /:username` : a route to delete a specific user by username. Removes the user's data and returns a success message if the deletion is successful.
-- `GET /:username/transactions` : a route to retrieve all transactions for a specific user by username. Returns an array of the user's transactions.
-- `POST /:username/transactions` : a route to add a new transaction for a specific user. Accepts transaction details in the request body and adds the transaction to the user's account.
-- `PUT /:username/transactions` : a route to update an existing transaction for a specific user. Accepts updated transaction details in the request body and modifies the specified transaction.
-- `DELETE /:username/transactions` : a route to delete a specific transaction for a user by username. Removes the transaction from the user's record and returns a confirmation message.
-- `GET /:username/categories` : a route to retrieve all spending or income categories for a specific user by username. Returns a list of categories associated with the user.
-- `POST /:username/categories` : a route to add a new category for a user. Accepts category details in the request body, creating a new category in the user's account.
-- `PUT /:username/categories` : a route to update an existing category for a user. Accepts updated category details in the request body and modifies the specified category.
-- `DELETE /:username/categories` : a route to delete a specific category for a user by username. Removes the category from the user's account and returns a confirmation message.
-
-<br></br>
-
-## Stack 🧰
-
-### 🎨 [Frontend](http://github.com/nady4/personal-finance)
-
-- React.js
-- TailwindCSS
-
-### 🖥️ [Backend](http://github.com/nady4/personal-finance-api)
-
-- TypeScript
-- Node.js
-
-### 💾 Database
-
-- MongoDB
-
-### ☁️ Deploy
-
-- GitHub Pages
-
-<br></br>
-
----
-
-### Frontend code:
-
-- [github.com/nady4/personal-finance](http://github.com/nady4/personal-finance)
-
-### Backend code:
-
-- [github.com/nady4/personal-finance-api](http://github.com/nady4/personal-finance-api)
-
----
-
-<br></br>
-
-## Contact 👋
-
-### You can see my portfolio at <a href="https://nady4.com/">nady4.com</a> 💼
-
-### Mail me at <a href="mailto:dev@nady4.com/">nadyajerochim@gmail.com</a> ✉️
-
-<br></br>
+- 💌 Email: **nadyajerochim@gmail.com**
+- 💼 LinkedIn: [/nady4](https://www.linkedin.com/in/nady4)
+- 👩🏻‍💻 GitHub: [@nady4](https://github.com/nady4)
