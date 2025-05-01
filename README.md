@@ -72,12 +72,6 @@ npm run dev
 
 <br>
 
-## 🎮 Demo
-
-🚧 _Coming soon... Stay tuned!_ 🚧
-
-<br>
-
 ## 📬 Contact
 
 - 💌 Email: **nadyajerochim@gmail.com**
