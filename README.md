@@ -72,6 +72,56 @@ npm run dev
 
 <br>
 
+## Endpoints 🛠️
+
+- `POST /register`  
+  Registers a new user. Accepts a `username` and `password` in the request body. Returns a JSON web token if successful.
+
+- `POST /login`  
+  Logs in a user. Accepts a `username` and `password` in the request body. Returns a JSON web token if successful.
+
+- `POST /logout`  
+  Logs out the currently authenticated user.
+
+- `POST /categories/:userId`  
+  Creates a new category for the specified user. Requires a valid JSON web token.
+
+- `PUT /categories/:userId`  
+  Updates a category for the specified user. Requires a valid JSON web token.
+
+- `DELETE /categories/:userId`  
+  Deletes a category for the specified user. Requires a valid JSON web token.
+
+- `POST /transactions/:userId`  
+  Creates a new transaction for the specified user. Requires a valid JSON web token.
+
+- `PUT /transactions/:userId`  
+  Updates a transaction for the specified user. Requires a valid JSON web token.
+
+- `DELETE /transactions/:userId`  
+  Deletes a transaction for the specified user. Requires a valid JSON web token.
+
+- `GET /users/:userId`  
+  Retrieves user information. Requires a valid JSON web token.
+
+- `PUT /users/:userId`  
+  Updates user information. Requires a valid JSON web token.
+
+- `DELETE /users/:userId`  
+  Deletes the user account. Requires a valid JSON web token.
+
+<br>
+
+## Environment Variables 🔐️
+
+The following environment variables are used in this code:
+
+- `MONGODB_URL` : the URL of the MongoDB database
+- `JWT_KEY` : the secret key to sign JSON web tokens with
+- `PORT` : the port number to run the web server on
+
+<br>
+
 ## 📬 Contact
 
 - 💌 Email: **nadyajerochim@gmail.com**
