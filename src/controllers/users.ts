@@ -4,6 +4,7 @@ import User from "../models/User";
 import Category from "../models/Category";
 import Transaction from "../models/Transaction";
 import mongoose from "mongoose";
+
 const getUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.params.userId)
