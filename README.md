@@ -125,6 +125,6 @@ The following environment variables are used in this code:
 
 ## 📬 Contact
 
-- 💌 Email: **nadyajerochim@gmail.com**
-- 💼 LinkedIn: [/nady4](https://www.linkedin.com/in/nady4)
-- 👩🏻‍💻 GitHub: [@nady4](https://github.com/nady4)
+### 💌 Email: **dev@nady4.com**
+### 💼 LinkedIn: [nady4](https://www.linkedin.com/in/nady4)
+### 👩🏻‍💻 GitHub: [@nady4](https://github.com/nady4)
