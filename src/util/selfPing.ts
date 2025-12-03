@@ -1,5 +1,4 @@
-console.log("\nNODE_ENV:", process.env.NODE_ENV);
-console.log("SELF_URL:", process.env.SELF_URL);
+console.log("\n⚙️  Environment:", process.env.NODE_ENV);
 
 // Self-ping to keep the app awake on Render
 if (process.env.NODE_ENV === "production") {

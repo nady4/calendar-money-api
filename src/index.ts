@@ -3,6 +3,8 @@ try {
 } catch (error) {
   console.log("No .env file found, asumming production environment");
 }
+
+import "./util/selfPing";
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes";
