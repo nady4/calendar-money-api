@@ -8,11 +8,12 @@
 </p>
 
 <p align="center">
-    <img src="./src/assets/docs/desktop_home2.png" width="100%">
-    <img src="./src/assets/docs/mobile_home.png" width="49%">
-    <img src="./src/assets/docs/mobile_login.png" width="49%">
-    <img src="./src/assets/docs/mobile_account.png" width="49%">
-    <img src="./src/assets/docs/mobile_editcat.png" width="49%">
+    <img src="./src/assets/docs/1.png" width="100%">
+    <img src="./src/assets/docs/2.png" width="49%">
+    <img src="./src/assets/docs/3.png" width="49%">
+    <img src="./src/assets/docs/4.png" width="100%">
+    <img src="./src/assets/docs/5.png" width="49%">
+    <img src="./src/assets/docs/6.png" width="49%">
 </p>
 
 <br>
