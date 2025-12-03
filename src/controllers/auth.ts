@@ -1,9 +1,13 @@
+// src/controllers/authController.ts
 import { Request, Response } from "express";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
-import { insertDefaultCategories } from "../util/defaultCategories";
+import {
+  insertDefaultCategories,
+  insertDefaultTransactions,
+} from "../util/defaultData";
 
 const registrationSchema = z.object({
   username: z
@@ -46,6 +50,8 @@ const register = async (req: Request, res: Response) => {
     });
 
     await user.save();
+
+    await insertDefaultTransactions(user._id.toString());
 
     return res.status(200).json({
       success: true,
