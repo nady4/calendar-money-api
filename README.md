@@ -6,41 +6,6 @@
 
 <br>
 
-## 📸 Screenshots
-
-<table>
-  <tr>
-    <td colspan="2" align="center"><em>Interactive API playground (registers a user, logs in, creates a category and a transaction)</em></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><img src="./src/assets/docs/1.png" alt="API playground" /></td>
-  </tr>
-  <tr>
-    <td width="50%" align="center"><em>Default categories seeded on register</em></td>
-    <td width="50%" align="center"><em>Monthly KPIs from populated user object</em></td>
-  </tr>
-  <tr>
-    <td><img src="./src/assets/docs/2.png" alt="Default categories" /></td>
-    <td><img src="./src/assets/docs/3.png" alt="KPIs" /></td>
-  </tr>
-  <tr>
-    <td align="center"><em>Category breakdown &amp; net worth</em></td>
-    <td align="center"><em>Budgets &amp; monthly summary</em></td>
-  </tr>
-  <tr>
-    <td><img src="./src/assets/docs/4.png" alt="Breakdown" /></td>
-    <td><img src="./src/assets/docs/5.png" alt="Budgets" /></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><em>Account — backup, theme, preferences (drives the import / export flow this API supports)</em></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><img src="./src/assets/docs/6.png" alt="Account" /></td>
-  </tr>
-</table>
-
-<br>
-
 ## 🌐 Live demo
 
 - The API is deployed on Render and intended to run together with the **[calendar-money](https://github.com/nady4/calendar-money)** frontend.
