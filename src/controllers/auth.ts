@@ -96,7 +96,7 @@ const login = async (req: Request, res: Response) => {
 
   jwt.sign(
     { id: user._id, username: user.username },
-    process.env.JWT_SECRET as string,
+    (process.env.JWT_SECRET ?? process.env.JWT_KEY) as string,
     { expiresIn: "7d" },
     (err, token) => {
       return res.status(200).json({

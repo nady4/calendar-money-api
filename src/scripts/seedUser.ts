@@ -22,19 +22,26 @@ const EMAIL = "dev@nady4.com";
 const PASSWORD = "nady4";
 const KEEP = process.argv.includes("--keep");
 
-const MONGO_URL = process.env.DB_URL;
+const MONGO_URL = process.env.DB_URL ?? process.env.MONGODB_URL;
 if (!MONGO_URL) {
-  console.error("DB_URL env var is required");
+  console.error("DB_URL (or MONGODB_URL) env var is required");
   process.exit(1);
 }
 
 async function wipeExisting() {
-  const existing = await User.findOne({ username: USERNAME });
-  if (!existing) return;
-  await Transaction.deleteMany({ _id: { $in: existing.transactions } });
-  await Category.deleteMany({ _id: { $in: existing.categories } });
-  await User.deleteOne({ _id: existing._id });
-  console.log(`deleted existing user "${USERNAME}" and its data`);
+  // Wipe the seeded username and any stale user holding the seeded email,
+  // since `email` has a unique index and would otherwise cause E11000 on insert.
+  const targets = await User.find({
+    $or: [{ username: USERNAME }, { email: EMAIL }],
+  });
+  for (const existing of targets) {
+    await Transaction.deleteMany({ _id: { $in: existing.transactions } });
+    await Category.deleteMany({ _id: { $in: existing.categories } });
+    await User.deleteOne({ _id: existing._id });
+    console.log(
+      `deleted existing user "${existing.username}" (${existing.email}) and its data`,
+    );
+  }
 }
 
 async function main() {

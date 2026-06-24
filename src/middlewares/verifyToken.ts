@@ -39,9 +39,9 @@ export const verifyToken = (
       throw new AuthError("No token provided");
     }
 
-    const jwtSecret = process.env.JWT_SECRET;
+    const jwtSecret = process.env.JWT_SECRET ?? process.env.JWT_KEY;
     if (!jwtSecret) {
-      throw new Error("JWT_SECRET is not configured");
+      throw new Error("JWT_SECRET (or JWT_KEY) is not configured");
     }
 
     const decoded = jwt.verify(token, jwtSecret) as JWTPayload;

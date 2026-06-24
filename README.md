@@ -32,7 +32,7 @@ npm install
 # 🛠️ Create .env file
 cat <<EOF > .env
 PORT=3000
-MONGODB_URL=mongodb://localhost:27017/calendar-money
+DB_URL=mongodb://localhost:27017/calendar-money
 JWT_SECRET=yoursecret
 EOF
 
@@ -114,8 +114,8 @@ npm run dev
 
 The following environment variables are used in this code:
 
-- `MONGODB_URL` : the URL of the MongoDB database
-- `JWT_KEY` : the secret key to sign JSON web tokens with
+- `DB_URL` : the URL of the MongoDB database
+- `JWT_SECRET` : the secret key to sign JSON web tokens with
 - `PORT` : the port number to run the web server on
 
 <br>
