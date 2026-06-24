@@ -1,571 +1,204 @@
 // src/util/defaultData.ts
+import { v4 as uuidv4 } from "uuid";
 import Category from "../models/Category";
 import Transaction from "../models/Transaction";
 import User from "../models/User";
 
+// Relatable, well-rounded default categories with distinct colors.
 const defaultCategories = [
-  { name: "Salary", color: "#1fff00", type: "Income" },
-  { name: "Investment", color: "#37b01c", type: "Income" },
-  { name: "Loan", color: "#FFC107", type: "Income" },
-  { name: "Rent", color: "#607D8B", type: "Expense" },
-  { name: "Food", color: "#e31b22", type: "Expense" },
-  { name: "Entertainment", color: "#ff00b3", type: "Expense" },
-  { name: "Shopping", color: "#9C27B0", type: "Expense" },
-  { name: "Transportation", color: "#3F51B5", type: "Expense" },
-  { name: "Health", color: "#ff0000", type: "Expense" },
-  { name: "Higiene", color: "#03cffc", type: "Expense" },
-  { name: "Education", color: "#00c0ff", type: "Expense" },
-  { name: "Gift", color: "#ff00c2", type: "Expense" },
-  { name: "Travel", color: "#00ffec", type: "Expense" },
-  { name: "Debt", color: "#9C27B0", type: "Expense" },
-  { name: "Services", color: "#795548", type: "Expense" },
-  { name: "Subscriptions", color: "#03fc41", type: "Expense" },
-  { name: "Pets", color: "#fc7703", type: "Expense" },
-  { name: "Other Expenses", color: "#795548", type: "Expense" },
-  { name: "Other Income", color: "#795548", type: "Income" },
+  // --- Income ---
+  { name: "Salary", color: "#4caf50", type: "Income" },
+  { name: "Freelance", color: "#26a69a", type: "Income" },
+  { name: "Bonus", color: "#689f38", type: "Income" },
+  { name: "Refund", color: "#aed581", type: "Income" },
+  // --- Expense ---
+  { name: "Rent", color: "#f44336", type: "Expense" },
+  { name: "Groceries", color: "#ff9800", type: "Expense" },
+  { name: "Utilities", color: "#9c27b0", type: "Expense" },
+  { name: "Transport", color: "#2196f3", type: "Expense" },
+  { name: "Dining Out", color: "#e91e63", type: "Expense" },
+  { name: "Entertainment", color: "#3f51b5", type: "Expense" },
+  { name: "Shopping", color: "#ffc107", type: "Expense" },
+  { name: "Health", color: "#fb5607", type: "Expense" },
+  { name: "Subscriptions", color: "#00bcd4", type: "Expense" },
+  { name: "Travel", color: "#8338ec", type: "Expense" },
+  { name: "Gym", color: "#ff006e", type: "Expense" },
+  { name: "Phone", color: "#fb8500", type: "Expense" },
+  { name: "Education", color: "#009688", type: "Expense" },
+  { name: "Pets", color: "#cddc39", type: "Expense" },
 ];
 
-const defaultTransactions = [
-  {
-    description: "Monthly salary January 2024",
-    amount: 2500,
-    categoryName: "Salary",
-    date: new Date("2024-01-05"),
-    group: "Fixed",
-  },
-  {
-    description: "Groceries supermarket",
-    amount: 120,
-    categoryName: "Food",
-    date: new Date("2024-01-12"),
-    group: "Variable",
-  },
-  {
-    description: "Netflix subscription",
-    amount: 12,
-    categoryName: "Subscriptions",
-    date: new Date("2024-02-01"),
-    group: "Fixed",
-  },
-  {
-    description: "Rent February 2024",
-    amount: 600,
-    categoryName: "Rent",
-    date: new Date("2024-02-01"),
-    group: "Fixed",
-  },
-  {
-    description: "Public transport card",
-    amount: 35,
-    categoryName: "Transportation",
-    date: new Date("2024-03-10"),
-    group: "Variable",
-  },
-  {
-    description: "Cinema with friends",
-    amount: 40,
-    categoryName: "Entertainment",
-    date: new Date("2024-04-20"),
-    group: "Leisure",
-  },
-  {
-    description: "Investment in ETF",
-    amount: 300,
-    categoryName: "Investment",
-    date: new Date("2024-05-15"),
-    group: "Investment",
-  },
-  {
-    description: "Vet visit",
-    amount: 90,
-    categoryName: "Pets",
-    date: new Date("2024-06-18"),
-    group: "Health",
-  },
-  {
-    description: "Gift for birthday",
-    amount: 70,
-    categoryName: "Gift",
-    date: new Date("2024-08-05"),
-    group: "Special",
-  },
-  {
-    description: "Loan received",
-    amount: 500,
-    categoryName: "Loan",
-    date: new Date("2024-09-10"),
-    group: "Income",
-  },
-  {
-    description: "Weekend trip",
-    amount: 350,
-    categoryName: "Travel",
-    date: new Date("2025-01-25"),
-    group: "Leisure",
-  },
-  {
-    description: "Monthly salary March 2025",
-    amount: 2700,
-    categoryName: "Salary",
-    date: new Date("2025-03-05"),
-    group: "Fixed",
-  },
-  {
-    description: "Online course",
-    amount: 150,
-    categoryName: "Education",
-    date: new Date("2025-04-02"),
-    group: "Investment",
-  },
-  {
-    description: "Electricity bill",
-    amount: 80,
-    categoryName: "Services",
-    date: new Date("2025-05-10"),
-    group: "Fixed",
-  },
-  {
-    description: "Clothes shopping",
-    amount: 200,
-    categoryName: "Shopping",
-    date: new Date("2025-07-19"),
-    group: "Variable",
-  },
-  {
-    description: "Dentist appointment",
-    amount: 130,
-    categoryName: "Health",
-    date: new Date("2025-09-03"),
-    group: "Health",
-  },
-  {
-    description: "Freelance extra income",
-    amount: 400,
-    categoryName: "Other Income",
-    date: new Date("2025-10-11"),
-    group: "Side job",
-  },
-  {
-    description: "Debt payment",
-    amount: 250,
-    categoryName: "Debt",
-    date: new Date("2025-11-20"),
-    group: "Debt",
-  },
-  {
-    description: "Monthly salary January 2026",
-    amount: 2900,
-    categoryName: "Salary",
-    date: new Date("2026-01-05"),
-    group: "Fixed",
-  },
-  {
-    description: "Streaming bundle",
-    amount: 25,
-    categoryName: "Subscriptions",
-    date: new Date("2026-02-01"),
-    group: "Fixed",
-  },
-  {
-    description: "Groceries and hygiene",
-    amount: 160,
-    categoryName: "Food",
-    date: new Date("2026-03-09"),
-    group: "Essentials",
-  },
-  {
-    description: "Gym membership",
-    amount: 50,
-    categoryName: "Health",
-    date: new Date("2026-04-03"),
-    group: "Health",
-  },
-  {
-    description: "Fuel",
-    amount: 70,
-    categoryName: "Transportation",
-    date: new Date("2026-05-14"),
-    group: "Variable",
-  },
-  {
-    description: "Tech gadget",
-    amount: 320,
-    categoryName: "Shopping",
-    date: new Date("2026-06-22"),
-    group: "Variable",
-  },
-  {
-    description: "Bonus Q1 2024",
-    amount: 800,
-    categoryName: "Salary",
-    date: new Date("2024-03-25"),
-    group: "Income",
-  },
-  {
-    description: "Coffee and snacks",
-    amount: 18,
-    categoryName: "Food",
-    date: new Date("2024-02-10"),
-    group: "Daily",
-  },
-  {
-    description: "Lunch at restaurant",
-    amount: 35,
-    categoryName: "Food",
-    date: new Date("2024-02-10"),
-    group: "Daily",
-  },
-  {
-    description: "Spotify subscription",
-    amount: 9,
-    categoryName: "Subscriptions",
-    date: new Date("2024-02-15"),
-    group: "Fixed",
-  },
-  {
-    description: "Mobile phone bill",
-    amount: 45,
-    categoryName: "Services",
-    date: new Date("2024-02-15"),
-    group: "Fixed",
-  },
-  {
-    description: "Bus tickets",
-    amount: 22,
-    categoryName: "Transportation",
-    date: new Date("2024-03-02"),
-    group: "Variable",
-  },
-  {
-    description: "Taxi after night out",
-    amount: 28,
-    categoryName: "Transportation",
-    date: new Date("2024-03-02"),
-    group: "Leisure",
-  },
-  {
-    description: "Online game purchase",
-    amount: 30,
-    categoryName: "Entertainment",
-    date: new Date("2024-03-18"),
-    group: "Leisure",
-  },
-  {
-    description: "Streaming movie rental",
-    amount: 7,
-    categoryName: "Entertainment",
-    date: new Date("2024-03-18"),
-    group: "Leisure",
-  },
-  {
-    description: "Investment in crypto",
-    amount: 250,
-    categoryName: "Investment",
-    date: new Date("2024-04-07"),
-    group: "Investment",
-  },
-  {
-    description: "Investment in stocks",
-    amount: 400,
-    categoryName: "Investment",
-    date: new Date("2024-04-07"),
-    group: "Investment",
-  },
-  {
-    description: "Shampoo and soap",
-    amount: 20,
-    categoryName: "Higiene",
-    date: new Date("2024-04-12"),
-    group: "Essentials",
-  },
-  {
-    description: "Toothpaste and deodorant",
-    amount: 16,
-    categoryName: "Higiene",
-    date: new Date("2024-04-12"),
-    group: "Essentials",
-  },
-  {
-    description: "Books for self-study",
-    amount: 90,
-    categoryName: "Education",
-    date: new Date("2024-05-03"),
-    group: "Learning",
-  },
-  {
-    description: "Online workshop fee",
-    amount: 60,
-    categoryName: "Education",
-    date: new Date("2024-05-03"),
-    group: "Learning",
-  },
-  {
-    description: "Pet food large bag",
-    amount: 55,
-    categoryName: "Pets",
-    date: new Date("2024-06-01"),
-    group: "Pets",
-  },
-  {
-    description: "Pet toys and snacks",
-    amount: 25,
-    categoryName: "Pets",
-    date: new Date("2024-06-01"),
-    group: "Pets",
-  },
-  {
-    description: "Electricity invoice mid-2024",
-    amount: 95,
-    categoryName: "Services",
-    date: new Date("2024-07-14"),
-    group: "Fixed",
-  },
-  {
-    description: "Internet provider bill",
-    amount: 55,
-    categoryName: "Services",
-    date: new Date("2024-07-14"),
-    group: "Fixed",
-  },
-  {
-    description: "New sneakers",
-    amount: 110,
-    categoryName: "Shopping",
-    date: new Date("2024-08-09"),
-    group: "Clothes",
-  },
-  {
-    description: "T-shirts and jeans",
-    amount: 130,
-    categoryName: "Shopping",
-    date: new Date("2024-08-09"),
-    group: "Clothes",
-  },
-  {
-    description: "Medicine for flu",
-    amount: 35,
-    categoryName: "Health",
-    date: new Date("2024-09-21"),
-    group: "Health",
-  },
-  {
-    description: "Routine check-up",
-    amount: 75,
-    categoryName: "Health",
-    date: new Date("2024-09-21"),
-    group: "Health",
-  },
-  {
-    description: "Birthday dinner out",
-    amount: 95,
-    categoryName: "Food",
-    date: new Date("2024-10-18"),
-    group: "Special",
-  },
-  {
-    description: "Gift card for friend",
-    amount: 50,
-    categoryName: "Gift",
-    date: new Date("2024-10-18"),
-    group: "Special",
-  },
-  {
-    description: "Side job payment November 2024",
-    amount: 380,
-    categoryName: "Other Income",
-    date: new Date("2024-11-09"),
-    group: "Side job",
-  },
-  {
-    description: "Loan installment November 2024",
-    amount: 210,
-    categoryName: "Debt",
-    date: new Date("2024-11-09"),
-    group: "Debt",
-  },
-  {
-    description: "Year-end bonus 2024",
-    amount: 900,
-    categoryName: "Salary",
-    date: new Date("2024-12-20"),
-    group: "Income",
-  },
-  {
-    description: "New year’s party expenses",
-    amount: 160,
-    categoryName: "Entertainment",
-    date: new Date("2024-12-31"),
-    group: "Leisure",
-  },
-  {
-    description: "Groceries first week 2025",
-    amount: 140,
-    categoryName: "Food",
-    date: new Date("2025-01-06"),
-    group: "Essentials",
-  },
-  {
-    description: "Gas for heating",
-    amount: 85,
-    categoryName: "Services",
-    date: new Date("2025-02-02"),
-    group: "Fixed",
-  },
-  {
-    description: "Monthly bus pass",
-    amount: 60,
-    categoryName: "Transportation",
-    date: new Date("2025-02-02"),
-    group: "Fixed",
-  },
-  {
-    description: "Conference ticket",
-    amount: 220,
-    categoryName: "Education",
-    date: new Date("2025-03-19"),
-    group: "Learning",
-  },
-  {
-    description: "Hotel for conference",
-    amount: 310,
-    categoryName: "Travel",
-    date: new Date("2025-03-19"),
-    group: "Work travel",
-  },
-  {
-    description: "Pet vaccination",
-    amount: 95,
-    categoryName: "Pets",
-    date: new Date("2025-04-27"),
-    group: "Health",
-  },
-  {
-    description: "House cleaning supplies",
-    amount: 32,
-    categoryName: "Other Expenses",
-    date: new Date("2025-05-11"),
-    group: "Essentials",
-  },
-  {
-    description: "Random online impulse buy",
-    amount: 60,
-    categoryName: "Shopping",
-    date: new Date("2025-05-11"),
-    group: "Variable",
-  },
-  {
-    description: "Extra shift income",
-    amount: 190,
-    categoryName: "Other Income",
-    date: new Date("2025-06-08"),
-    group: "Income",
-  },
-  {
-    description: "Debt principal reduction",
-    amount: 300,
-    categoryName: "Debt",
-    date: new Date("2025-06-08"),
-    group: "Debt",
-  },
-  {
-    description: "City break weekend",
-    amount: 280,
-    categoryName: "Travel",
-    date: new Date("2025-08-15"),
-    group: "Leisure",
-  },
-  {
-    description: "Museum and attractions tickets",
-    amount: 75,
-    categoryName: "Entertainment",
-    date: new Date("2025-08-15"),
-    group: "Leisure",
-  },
-  {
-    description: "Annual domain renewal",
-    amount: 20,
-    categoryName: "Services",
-    date: new Date("2025-09-30"),
-    group: "Fixed",
-  },
-  {
-    description: "Cloud service subscription",
-    amount: 12,
-    categoryName: "Subscriptions",
-    date: new Date("2025-09-30"),
-    group: "Fixed",
-  },
-  {
-    description: "New winter jacket",
-    amount: 180,
-    categoryName: "Shopping",
-    date: new Date("2025-11-05"),
-    group: "Clothes",
-  },
-  {
-    description: "Charity donation end of 2025",
-    amount: 70,
-    categoryName: "Other Expenses",
-    date: new Date("2025-12-22"),
-    group: "Donation",
-  },
-  {
-    description: "Salary raise adjustment 2026",
-    amount: 300,
-    categoryName: "Salary",
-    date: new Date("2026-02-10"),
-    group: "Income",
-  },
-  {
-    description: "Groceries mid-2026",
-    amount: 155,
-    categoryName: "Food",
-    date: new Date("2026-06-04"),
-    group: "Essentials",
-  },
-  {
-    description: "Weekend streaming marathon snacks",
-    amount: 26,
-    categoryName: "Food",
-    date: new Date("2026-06-04"),
-    group: "Leisure",
-  },
-  {
-    description: "Eye exam and glasses",
-    amount: 260,
-    categoryName: "Health",
-    date: new Date("2026-07-19"),
-    group: "Health",
-  },
-  {
-    description: "Online subscription bundle 2026",
-    amount: 32,
-    categoryName: "Subscriptions",
-    date: new Date("2026-09-01"),
-    group: "Fixed",
-  },
-  {
-    description: "Final loan payoff",
-    amount: 520,
-    categoryName: "Debt",
-    date: new Date("2026-10-10"),
-    group: "Debt",
-  },
-  {
-    description: "Investment rebalance 2026",
-    amount: 450,
-    categoryName: "Investment",
-    date: new Date("2026-11-23"),
-    group: "Investment",
-  },
-  {
-    description: "Year-end celebration 2026",
-    amount: 210,
-    categoryName: "Entertainment",
-    date: new Date("2026-12-31"),
-    group: "Leisure",
-  },
-];
+// Deterministic PRNG so re-runs produce identical data.
+let _s = 0x1a2b3c4d;
+const rng = () => {
+  _s = (_s * 1664525 + 1013904223) >>> 0;
+  return _s / 0xffffffff;
+};
+const rint = (min: number, max: number) =>
+  Math.floor(rng() * (max - min + 1)) + min;
+const rfloat = (min: number, max: number) =>
+  +(rng() * (max - min) + min).toFixed(2);
+const pick = <T>(arr: T[]): T => arr[Math.floor(rng() * arr.length)];
+
+const lastDay = (y: number, m: number) =>
+  new Date(Date.UTC(y, m, 0)).getUTCDate();
+
+// Today, used to avoid seeding non-recurring transactions in the future.
+const TODAY = new Date(2026, 5, 24); // 2026-06-24
+const isFuture = (d: Date) => d > TODAY;
+
+type SeedTx = {
+  description: string;
+  amount: number;
+  categoryName: string;
+  date: Date;
+  group?: string;
+};
+
+// Build a relatable transaction history across 2025 & 2026.
+// Recurring monthly series share a `group` id so the UI treats them as one
+// repeat group (edit one -> updates all, delete one -> removes the series).
+const buildDefaultTransactions = (): SeedTx[] => {
+  const txs: SeedTx[] = [];
+  const add = (
+    categoryName: string,
+    date: Date,
+    amount: number,
+    description: string,
+    group?: string,
+  ) => {
+    if (isFuture(date)) return;
+    txs.push({ categoryName, date, amount, description, group });
+  };
+
+  // Shared group ids for each recurring monthly series.
+  const groups = {
+    salary: uuidv4(),
+    rent: uuidv4(),
+    utilities: uuidv4(),
+    phone: uuidv4(),
+    subscriptions: uuidv4(),
+    gym: uuidv4(),
+    transport: uuidv4(),
+  };
+
+  const months: { y: number; m: number }[] = [];
+  for (let y = 2025; y <= 2026; y++)
+    for (let m = 1; m <= 12; m++) months.push({ y, m });
+
+  months.forEach(({ y, m }) => {
+    // --- Recurring income / fixed expenses (monthly series) ---
+    add("Salary", new Date(y, m - 1, 1), 3200, "Monthly salary", groups.salary);
+    add("Rent", new Date(y, m - 1, 3), 1100, "Apartment rent", groups.rent);
+    add(
+      "Utilities",
+      new Date(y, m - 1, 12),
+      rfloat(110, 180),
+      "Electricity & water",
+      groups.utilities,
+    );
+    add("Phone", new Date(y, m - 1, 15), 35, "Phone plan", groups.phone);
+    add(
+      "Subscriptions",
+      new Date(y, m - 1, 5),
+      24.99,
+      "Streaming & cloud",
+      groups.subscriptions,
+    );
+    add("Gym", new Date(y, m - 1, 7), 29, "Gym membership", groups.gym);
+    add(
+      "Transport",
+      new Date(y, m - 1, 20),
+      65,
+      "Monthly transit pass",
+      groups.transport,
+    );
+
+    // --- Variable expenses ---
+    const groceryTrips = rint(2, 3);
+    for (let i = 0; i < groceryTrips; i++)
+      add(
+        "Groceries",
+        new Date(y, m - 1, rint(2, lastDay(y, m) - 1)),
+        rfloat(45, 110),
+        pick(["Weekly groceries", "Costco run", "Local market"]),
+      );
+
+    const diningTrips = rint(1, 3);
+    for (let i = 0; i < diningTrips; i++)
+      add(
+        "Dining Out",
+        new Date(y, m - 1, rint(4, lastDay(y, m) - 2)),
+        rfloat(15, 70),
+        pick(["Dinner with friends", "Lunch out", "Pizza night", "Brunch"]),
+      );
+
+    if (rng() > 0.3)
+      add(
+        "Shopping",
+        new Date(y, m - 1, rint(6, 26)),
+        rfloat(25, 220),
+        pick(["Clothes", "Home essentials", "Electronics", "Gift"]),
+      );
+
+    if (rng() > 0.4)
+      add(
+        "Entertainment",
+        new Date(y, m - 1, rint(3, 27)),
+        rfloat(15, 60),
+        pick(["Cinema", "Concert tickets", "Steam game", "Board game night"]),
+      );
+
+    // Freelance gig roughly every other month.
+    if (rng() > 0.5)
+      add(
+        "Freelance",
+        new Date(y, m - 1, rint(8, 22)),
+        rint(300, 900),
+        "Freelance project",
+      );
+
+    // Pet expenses every few months.
+    if (rng() > 0.75)
+      add(
+        "Pets",
+        new Date(y, m - 1, rint(5, 24)),
+        rfloat(20, 80),
+        pick(["Pet food", "Vet visit", "Pet toys"]),
+      );
+  });
+
+  // --- Occasional big-ticket & one-off items ---
+  const oneOffs: SeedTx[] = [
+    { categoryName: "Travel", date: new Date(2025, 2, 15), amount: 850, description: "Spring break trip" },
+    { categoryName: "Travel", date: new Date(2025, 6, 10), amount: 1450, description: "Summer vacation" },
+    { categoryName: "Travel", date: new Date(2025, 11, 22), amount: 600, description: "Holiday travel" },
+    { categoryName: "Travel", date: new Date(2026, 1, 18), amount: 520, description: "Ski weekend" },
+    { categoryName: "Travel", date: new Date(2026, 4, 20), amount: 980, description: "Beach trip" },
+
+    { categoryName: "Health", date: new Date(2025, 1, 11), amount: 80, description: "Dental checkup" },
+    { categoryName: "Health", date: new Date(2025, 8, 4), amount: 45, description: "Pharmacy" },
+    { categoryName: "Health", date: new Date(2026, 0, 19), amount: 120, description: "Eye exam & glasses" },
+    { categoryName: "Health", date: new Date(2026, 3, 8), amount: 35, description: "Pharmacy" },
+
+    { categoryName: "Education", date: new Date(2025, 2, 19), amount: 220, description: "Conference ticket" },
+    { categoryName: "Education", date: new Date(2025, 4, 3), amount: 90, description: "Books for self-study" },
+    { categoryName: "Education", date: new Date(2026, 2, 12), amount: 150, description: "Online course" },
+
+    { categoryName: "Refund", date: new Date(2025, 3, 14), amount: 540, description: "Tax refund" },
+    { categoryName: "Refund", date: new Date(2026, 3, 12), amount: 610, description: "Tax refund" },
+
+    { categoryName: "Bonus", date: new Date(2025, 11, 20), amount: 1600, description: "Year-end bonus" },
+    { categoryName: "Bonus", date: new Date(2026, 5, 18), amount: 800, description: "Mid-year bonus" },
+  ];
+  oneOffs.forEach((t) => {
+    if (!isFuture(t.date)) txs.push(t);
+  });
+
+  return txs;
+};
+
+const defaultTransactions = buildDefaultTransactions();
 
 export const insertDefaultCategories = async () => {
   try {
@@ -586,7 +219,7 @@ export const insertDefaultTransactions = async (userId: string) => {
   const categories = await Category.find({ name: { $in: categoryNames } });
 
   const categoriesByName = new Map<string, string>(
-    categories.map((cat) => [cat.name, String(cat._id)])
+    categories.map((cat) => [cat.name, String(cat._id)]),
   );
 
   const transactionsToInsert = defaultTransactions
@@ -595,8 +228,8 @@ export const insertDefaultTransactions = async (userId: string) => {
       date: t.date,
       amount: t.amount,
       description: t.description,
-      category: categoriesByName.get(t.categoryName),
-      group: t.group,
+      category: categoriesByName.get(t.categoryName) as string,
+      group: t.group ?? null,
     }));
 
   if (!transactionsToInsert.length) {
@@ -604,7 +237,7 @@ export const insertDefaultTransactions = async (userId: string) => {
   }
 
   const createdTransactions = await Transaction.insertMany(
-    transactionsToInsert
+    transactionsToInsert,
   );
 
   await User.findByIdAndUpdate(userId, {
