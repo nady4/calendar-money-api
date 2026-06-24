@@ -3,10 +3,15 @@ import {
   createTransaction,
   updateTransaction,
   deleteTransaction,
+  bulkImport,
 } from "../controllers/transactions";
 const { verifyToken } = require("../middlewares/verifyToken");
 
 const router = Router();
+
+router.post("/transactions/bulk/:userId", verifyToken, (req, res) => {
+  bulkImport(req, res);
+});
 
 router.post("/transactions/:userId", verifyToken, (req, res) => {
   createTransaction(req, res);
