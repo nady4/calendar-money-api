@@ -1,7 +1,7 @@
 <h1 align="center"> Calendar Money API </h1>
 
 <p align="center">
-💚 REST API that powers the Calendar Money cash-flow app — built with Node.js, Express, Mongoose and MongoDB. JWT-based auth, full CRUD for users / categories / transactions, capped repeat-expansion for recurring entries, and a bulk endpoint for CSV backups.
+💚 REST API built with Node.js, Express, Mongoose and MongoDB. JWT-based auth, full CRUD for users / categories / transactions, capped repeat-expansion for recurring entries, and a bulk endpoint for CSV backups.
 </p>
 
 <br>
