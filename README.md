@@ -40,6 +40,7 @@
 - **Update** — `PUT /transactions/:userId` updates one transaction and, if a `group` is provided, propagates the change to **every transaction in the series** with `updateMany({ group })`. Returns the populated user.
 - **Delete** — `DELETE /transactions/:userId` removes the row from `user.transactions` and, if a `group` exists, `deleteMany({ group })` for the whole series; otherwise just deletes the one document.
 - **Bulk import** — `POST /transactions/bulk/:userId` is the entry point for the frontend's CSV restore. It accepts `{ categories, transactions }` with a hard cap of **5000 combined items**. Existing categories are matched by name (to keep references stable across exports), missing categories are created, and transactions are inserted as-is — including any `group` uuid from the export, so repeat series round-trip through CSV.
+- **Scan invoice** — `POST /transactions/scan/:userId` accepts a `multipart/form-data` upload with an `image` field (invoice/receipt photo) plus an optional `existingCategories` JSON-string field. It proxies the image to a vision-capable AI model (provider-agnostic OpenAI-compatible endpoint) and returns draft transactions — `{ date: "YYYY-MM-DD"|null, transactions: [{ date?, amount, description, categoryName, categoryType, color }] }`. **This endpoint performs no database writes**; persistence is done by reusing the bulk import endpoint. Categories are auto-created there from the AI-suggested names.
 - **Populated responses** — every controller returns the fully populated user (categories + transactions-with-category), so the frontend never needs a second request to render the dashboard.
 
 ### 🧰 Cross-cutting
@@ -48,6 +49,7 @@
 - **Self-ping** — `src/util/selfPing.ts` keeps the Render free tier awake by pinging the server periodically (loaded in `src/index.ts`).
 - **Graceful .env loading** — `src/index.ts` calls `process.loadEnvFile()` and falls back to "production environment" if no `.env` is present, so the same binary runs locally and on Render.
 - **Pretty logs** — emojis on success / error (✅ / 🚫 / 🟢 / 🔴 / 💚) so the Render logs are scannable at a glance.
+- **Scan proxy** — `POST /transactions/scan/:userId` forwards an invoice image to a vision model via `multer` (memory storage, 10 MB cap). The AI key stays server-side; the frontend only sends the image. Configure with `VISION_API_BASE`, `VISION_API_KEY`, `VISION_MODEL` (+ optional `VISION_API_MAX_BYTES`). The controller targets an OpenAI-compatible `/chat/completions` endpoint, so on the **OpenCode Go** subscription set `VISION_API_BASE=https://opencode.ai/zen/go/v1` and `VISION_MODEL=glm-5.2` (fallbacks on the same endpoint: `deepseek-v4-pro`, `kimi-k2.6`, `mimo-v2.5`). Go models that use the `/messages` Anthropic shape (MiniMax M3 / Qwen3.7) are not supported by the current implementation.
 
 <br>
 
@@ -96,7 +98,7 @@ calendar-money-api/
 │   │   ├── defaultData.ts      # Seed categories + demo transactions
 │   │   └── selfPing.ts         # Keep-alive for free-tier hosts
 │   └── scripts/
-│       └── seedUser.ts         # CLI: `npm run seed` — create a demo user
+│       └── seedUser.ts         # CLI: `pnpm run seed` — create a demo user
 ├── src/assets/docs/            # README screenshots
 └── package.json
 ```
@@ -168,7 +170,7 @@ git clone https://github.com/nady4/calendar-money-api
 cd calendar-money-api
 
 # 📦 Install dependencies
-npm install
+pnpm install
 ```
 
 ### 🔑 Environment setup
@@ -191,7 +193,7 @@ JWT_SECRET=replace-with-a-long-random-string
 ### 💻 Run the dev server
 
 ```sh
-npm run dev
+pnpm run dev
 ```
 
 The server starts on `http://localhost:$PORT` (default `3000`) and live-reloads on save.
@@ -199,8 +201,8 @@ The server starts on `http://localhost:$PORT` (default `3000`) and live-reloads 
 ### 🏗️ Build for production
 
 ```sh
-npm run build
-npm start
+pnpm run build
+pnpm start
 ```
 
 `build` runs `tsc` and produces `dist/`; `start` runs the compiled `dist/index.js`.
@@ -208,7 +210,7 @@ npm start
 ### 🌱 Seed a demo user
 
 ```sh
-npm run seed
+pnpm run seed
 ```
 
 Creates a user you can log into from the frontend so the dashboard isn't empty on first run.
@@ -217,12 +219,12 @@ Creates a user you can log into from the frontend so the dashboard isn't empty o
 
 ## 📜 Scripts
 
-| Command         | Description                                  |
-| --------------- | -------------------------------------------- |
-| `npm run dev`   | Start the dev server with live reload        |
-| `npm run build` | Compile TypeScript to `dist/`                |
-| `npm start`     | Run the compiled server                      |
-| `npm run seed`  | Insert a demo user (categories + transactions) |
+| Command          | Description                                  |
+| ---------------- | -------------------------------------------- |
+| `pnpm run dev`   | Start the dev server with live reload        |
+| `pnpm run build` | Compile TypeScript to `dist/`                |
+| `pnpm start`     | Run the compiled server                      |
+| `pnpm run seed`  | Insert a demo user (categories + transactions) |
 
 <br>
 

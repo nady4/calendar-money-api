@@ -25,7 +25,7 @@ const getUser = async (req: Request, res: Response) => {
       });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId as string)) {
       return res.status(400).json({
         success: false,
         error: "Invalid user ID",
