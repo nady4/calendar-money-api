@@ -120,7 +120,6 @@ const callVision = async (
 
   const payload = {
     model,
-    response_format: { type: "json_object" },
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
       {
