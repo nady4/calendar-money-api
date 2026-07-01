@@ -28,6 +28,18 @@ const userSchema = new mongoose.Schema({
       default: [],
     },
   ],
+  scanUsage: {
+    day: { type: String, default: "" },
+    dayCount: { type: Number, default: 0 },
+    month: { type: String, default: "" },
+    monthCount: { type: Number, default: 0 },
+    lastScanAt: { type: Date, default: null },
+  },
+  visionApiKeyEnc: {
+    ciphertext: { type: String, default: null },
+    iv: { type: String, default: null },
+    authTag: { type: String, default: null },
+  },
   createdAt: {
     type: Date,
     default: Date.now,

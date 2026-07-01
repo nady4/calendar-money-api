@@ -1,7 +1,16 @@
 import { Request, Response } from "express";
 import User from "../models/User";
+import { decryptKey } from "../util/crypto";
 
 const DEFAULT_MAX_BYTES = 10 * 1024 * 1024;
+const DEFAULT_DAILY_LIMIT = 10;
+const DEFAULT_MONTHLY_LIMIT = 100;
+const MAX_RESPONSE_BYTES = 64 * 1024;
+const ALLOWED_MIME = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
 
 interface ScanDraft {
   date?: string;
@@ -15,6 +24,22 @@ interface ScanDraft {
 interface ScanResult {
   date: string | null;
   transactions: ScanDraft[];
+}
+
+interface ScanUsage {
+  day: string;
+  dayCount: number;
+  month: string;
+  monthCount: number;
+  lastScanAt: Date | null;
+}
+
+interface QuotaSnapshot {
+  usedDay: number;
+  limitDay: number;
+  usedMonth: number;
+  limitMonth: number;
+  resetsAt: string;
 }
 
 const SYSTEM_PROMPT = `You extract transactions from invoice/receipt images.
@@ -42,11 +67,38 @@ const toDataUrl = (file: Express.Multer.File): string => {
   return `data:${mime};base64,${base64}`;
 };
 
+const parseIntEnv = (key: string, fallback: number): number => {
+  const raw = process.env[key];
+  if (!raw) return fallback;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+
 const parseFloatEnv = (key: string, fallback: number): number => {
   const raw = process.env[key];
   if (!raw) return fallback;
   const parsed = Number(raw);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+
+const todayKey = (now: Date = new Date()): string => {
+  const y = now.getUTCFullYear();
+  const m = String(now.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(now.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+};
+
+const monthKey = (now: Date = new Date()): string => {
+  const y = now.getUTCFullYear();
+  const m = String(now.getUTCMonth() + 1).padStart(2, "0");
+  return `${y}-${m}`;
+};
+
+const endOfUtcDay = (now: Date = new Date()): Date => {
+  const next = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
+  );
+  return next;
 };
 
 const sanitizeDraft = (raw: unknown): ScanDraft | null => {
@@ -102,24 +154,83 @@ const sanitizeResult = (parsed: unknown): ScanResult => {
   return { date, transactions };
 };
 
-const callVision = async (
-  dataUrl: string,
-  existingCategories: string[]
-): Promise<ScanResult> => {
-  const base = process.env.VISION_API_BASE;
-  const key = process.env.VISION_API_KEY;
-  const model = process.env.VISION_MODEL;
+const getQuotaLimits = () => ({
+  daily: parseIntEnv("SCAN_DAILY_LIMIT", DEFAULT_DAILY_LIMIT),
+  monthly: parseIntEnv("SCAN_MONTHLY_LIMIT", DEFAULT_MONTHLY_LIMIT),
+});
 
-  if (!base || !key || !model) {
-    throw new Error(
-      "Vision provider not configured (VISION_API_BASE / VISION_API_KEY / VISION_MODEL)."
-    );
+const buildQuotaSnapshot = (
+  usage: ScanUsage,
+  limits: { daily: number; monthly: number }
+): QuotaSnapshot => ({
+  usedDay: usage.dayCount,
+  limitDay: limits.daily,
+  usedMonth: usage.monthCount,
+  limitMonth: limits.monthly,
+  resetsAt: endOfUtcDay().toISOString(),
+});
+
+const ensureFreshUsage = (
+  usage: ScanUsage | undefined,
+  now: Date
+): ScanUsage => {
+  const t = todayKey(now);
+  const m = monthKey(now);
+  const base: ScanUsage = usage ?? {
+    day: "",
+    dayCount: 0,
+    month: "",
+    monthCount: 0,
+    lastScanAt: null,
+  };
+  return {
+    day: base.day === t ? t : t,
+    dayCount: base.day === t ? base.dayCount : 0,
+    month: base.month === m ? m : m,
+    monthCount: base.month === m ? base.monthCount : 0,
+    lastScanAt: base.lastScanAt ?? null,
+  };
+};
+
+const resolveProviderKey = async (
+  userId: string,
+  useMyKey: boolean
+): Promise<{ apiKey: string; base: string; model: string } | null> => {
+  const base = process.env.VISION_API_BASE;
+  const model = process.env.VISION_MODEL;
+  if (!base || !model) return null;
+
+  if (useMyKey) {
+    const user = await User.findById(userId).select("visionApiKeyEnc");
+    if (user?.visionApiKeyEnc?.ciphertext) {
+      try {
+        const apiKey = decryptKey({
+          ciphertext: user.visionApiKeyEnc.ciphertext,
+          iv: user.visionApiKeyEnc.iv ?? "",
+          authTag: user.visionApiKeyEnc.authTag ?? "",
+        });
+        return { apiKey, base, model };
+      } catch (err) {
+        console.error("Failed to decrypt BYOK:", err);
+        return null;
+      }
+    }
   }
 
-  const endpoint = base.replace(/\/$/, "") + "/chat/completions";
+  const apiKey = process.env.VISION_API_KEY;
+  if (!apiKey) return null;
+  return { apiKey, base, model };
+};
+
+const callVision = async (
+  dataUrl: string,
+  existingCategories: string[],
+  provider: { apiKey: string; base: string; model: string }
+): Promise<ScanResult> => {
+  const endpoint = provider.base.replace(/\/$/, "") + "/chat/completions";
 
   const payload = {
-    model,
+    model: provider.model,
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
       {
@@ -136,7 +247,7 @@ const callVision = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`,
+      Authorization: `Bearer ${provider.apiKey}`,
     },
     body: JSON.stringify(payload),
   });
@@ -148,13 +259,29 @@ const callVision = async (
     );
   }
 
-  const data = (await response.json()) as {
-    choices?: Array<{ message?: { content?: string } }>;
-  };
-  const content = data?.choices?.[0]?.message?.content;
-  if (!content || typeof content !== "string") {
-    throw new Error("Vision API returned no content.");
+  if (!response.body) {
+    throw new Error("Vision API returned no body.");
   }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let received = 0;
+  let content = "";
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    received += value.byteLength;
+    if (received > MAX_RESPONSE_BYTES) {
+      try {
+        await reader.cancel();
+      } catch {
+        // ignore
+      }
+      throw new Error("Vision API response exceeded size limit.");
+    }
+    content += decoder.decode(value, { stream: true });
+  }
+  content += decoder.decode();
 
   let parsed: unknown;
   try {
@@ -175,12 +302,46 @@ const scanInvoice = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, error: "No image provided." });
     }
 
+    if (!ALLOWED_MIME.has(file.mimetype)) {
+      return res.status(415).json({
+        success: false,
+        error: `Unsupported file type: ${file.mimetype || "unknown"}. Use JPEG, PNG, or WebP.`,
+      });
+    }
+
     const maxBytes = parseFloatEnv("VISION_API_MAX_BYTES", DEFAULT_MAX_BYTES);
     if (file.size > maxBytes) {
       return res.status(413).json({
         success: false,
-        error: `Image too large. Limit is ${maxBytes} bytes.`,
+        error: `Image too large. Limit is ${Math.round(maxBytes / 1024 / 1024)} MB.`,
       });
+    }
+
+    const userId = req.params.userId as string;
+    const useMyKey = req.body?.useMyKey === "true" || req.body?.useMyKey === true;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found." });
+    }
+
+    const limits = getQuotaLimits();
+
+    if (!useMyKey) {
+      const usage = ensureFreshUsage(
+        user.scanUsage as ScanUsage | undefined,
+        new Date()
+      );
+      if (usage.dayCount >= limits.daily || usage.monthCount >= limits.monthly) {
+        return res.status(429).json({
+          success: false,
+          error: "Daily scan limit reached.",
+          quota: {
+            ...buildQuotaSnapshot(usage, limits),
+            reason: usage.dayCount >= limits.daily ? "daily" : "monthly",
+          },
+        });
+      }
     }
 
     let existingNames: string[] = [];
@@ -195,23 +356,45 @@ const scanInvoice = async (req: Request, res: Response) => {
         // ignore malformed payload
       }
     }
-
     if (!existingNames.length) {
-      const user = await User.findById(req.params.userId).populate("categories");
-      if (user) {
-        existingNames = (user.categories as Array<{ name?: string }>)
+      const populated = await User.findById(userId).populate("categories");
+      if (populated) {
+        existingNames = (populated.categories as Array<{ name?: string }>)
           .map((c) => c?.name)
           .filter((n): n is string => typeof n === "string");
       }
     }
 
+    const provider = await resolveProviderKey(userId, useMyKey);
+    if (!provider) {
+      return res.status(503).json({
+        success: false,
+        error:
+          "Vision provider not configured. Add a key in Account or set VISION_API_KEY on the server.",
+      });
+    }
+
     const dataUrl = toDataUrl(file);
-    const result = await callVision(dataUrl, existingNames);
+    const result = await callVision(dataUrl, existingNames, provider);
+
+    const updated = ensureFreshUsage(
+      user.scanUsage as ScanUsage | undefined,
+      new Date()
+    );
+    updated.dayCount += 1;
+    updated.monthCount += 1;
+    updated.lastScanAt = new Date();
+    await User.updateOne(
+      { _id: userId },
+      { $set: { scanUsage: updated, updatedAt: new Date() } }
+    );
 
     return res.status(200).json({
       success: true,
       date: result.date,
       transactions: result.transactions,
+      quota: buildQuotaSnapshot(updated, limits),
+      byok: useMyKey,
     });
   } catch (err) {
     console.error("Scan error:", err);
@@ -221,5 +404,26 @@ const scanInvoice = async (req: Request, res: Response) => {
   }
 };
 
-export { scanInvoice };
-export type { ScanResult, ScanDraft };
+const getScanQuota = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found." });
+    }
+    const usage = ensureFreshUsage(
+      user.scanUsage as ScanUsage | undefined,
+      new Date()
+    );
+    return res.status(200).json({
+      success: true,
+      quota: buildQuotaSnapshot(usage, getQuotaLimits()),
+      byok: Boolean(user.visionApiKeyEnc?.ciphertext),
+    });
+  } catch (err) {
+    console.error("Scan quota error:", err);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+
+export { scanInvoice, getScanQuota };
+export type { ScanResult, ScanDraft, QuotaSnapshot, ScanUsage };
