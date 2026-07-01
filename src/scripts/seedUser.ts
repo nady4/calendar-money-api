@@ -4,8 +4,14 @@
 // categories + transactions. Bypasses the /register password rules, so the
 // short password "nady4" can be used for the dev account.
 //
-//   DB_URL=... npx ts-node src/scripts/seedUser.ts
-//   DB_URL=... npx ts-node src/scripts/seedUser.ts --keep   # don't delete existing
+//   pnpm run seed
+//   pnpm run seed -- --keep   # don't delete existing
+
+try {
+  process.loadEnvFile();
+} catch {
+  // no .env file, fall through to system env
+}
 
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";

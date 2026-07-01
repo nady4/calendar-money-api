@@ -3,7 +3,13 @@
 // Resets the scan quota counters for the seeded dev user without touching
 // transactions or categories. Safe to run repeatedly.
 //
-//   DB_URL=... npx ts-node src/scripts/resetScanQuota.ts
+//   pnpm run reset-quota
+
+try {
+  process.loadEnvFile();
+} catch {
+  // no .env file, fall through to system env
+}
 
 import mongoose from "mongoose";
 import User from "../models/User";
