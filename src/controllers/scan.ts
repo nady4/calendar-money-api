@@ -266,7 +266,7 @@ const callVision = async (
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let received = 0;
-  let content = "";
+  let raw = "";
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -279,9 +279,27 @@ const callVision = async (
       }
       throw new Error("Vision API response exceeded size limit.");
     }
-    content += decoder.decode(value, { stream: true });
+    raw += decoder.decode(value, { stream: true });
   }
-  content += decoder.decode();
+  raw += decoder.decode();
+
+  let envelope: { choices?: Array<{ message?: { content?: unknown } }> };
+  try {
+    envelope = JSON.parse(raw);
+  } catch {
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("Vision API returned non-JSON content.");
+    envelope = JSON.parse(match[0]);
+  }
+
+  const content = envelope?.choices?.[0]?.message?.content;
+  if (typeof content !== "string" || !content.length) {
+    throw new Error("Vision API returned no content.");
+  }
+
+  if (content.length > MAX_RESPONSE_BYTES) {
+    throw new Error("Vision API content exceeded size limit.");
+  }
 
   let parsed: unknown;
   try {

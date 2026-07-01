@@ -44,11 +44,30 @@ async function wipeExisting() {
   }
 }
 
+async function resetScanQuota() {
+  const result = await User.updateMany(
+    { $or: [{ username: USERNAME }, { email: EMAIL }] },
+    {
+      $set: {
+        scanUsage: {
+          day: "",
+          dayCount: 0,
+          month: "",
+          monthCount: 0,
+          lastScanAt: null,
+        },
+      },
+    }
+  );
+  console.log(`reset scan quota on ${result.modifiedCount} user(s)`);
+}
+
 async function main() {
   await mongoose.connect(MONGO_URL as string);
   console.log("connected to DB");
 
   if (!KEEP) await wipeExisting();
+  else await resetScanQuota();
 
   const hash = bcrypt.hashSync(PASSWORD, 10);
   const categoryIds = await insertDefaultCategories();
@@ -58,6 +77,13 @@ async function main() {
     email: EMAIL,
     password: hash,
     categories: categoryIds,
+    scanUsage: {
+      day: "",
+      dayCount: 0,
+      month: "",
+      monthCount: 0,
+      lastScanAt: null,
+    },
   });
   await user.save();
 
@@ -68,7 +94,7 @@ async function main() {
     .populate("transactions");
 
   console.log(
-    `seeded user "${USERNAME}" -> ${reloaded?.transactions.length} transactions, ${reloaded?.categories.length} categories`,
+    `seeded user "${USERNAME}" -> ${reloaded?.transactions.length} transactions, ${reloaded?.categories.length} categories, scan quota reset`,
   );
   await mongoose.disconnect();
   console.log("done");
