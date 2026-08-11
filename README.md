@@ -1,7 +1,7 @@
 <h1 align="center"> Calendar Money API </h1>
 
 <p align="center">
-💚 REST API built with Node.js, Express and MongoDB. JWT-based auth, full CRUD for users / categories / transactions, a bulk endpoint for CSV backups, and an AI-powered invoice scan with per-user quota + BYOK.
+💸 A personal finance app that turns your income and expenses into a calendar, so you can plan your life.
 </p>
 
 <br>
